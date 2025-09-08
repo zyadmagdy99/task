@@ -1,6 +1,14 @@
 import React from "react";
+import { useLanguage } from "../context/LanguageProvider";
 
 export default function PayInAdvanceToggle({ checked, onChange }) {
+  const { lang } = useLanguage();
+
+  const label = {
+    en: "Pay in advance • EXTRA 5% DISCOUNT",
+    ar: "ادفع مقدمًا • خصم إضافي ٥٪",
+  };
+
   return (
     <label className="flex items-center cursor-pointer gap-3 py-6">
       <input
@@ -25,7 +33,7 @@ export default function PayInAdvanceToggle({ checked, onChange }) {
           checked ? "text-green-700" : "text-gray-600"
         }`}
       >
-        Pay in advance • EXTRA 5% DISCOUNT
+        {label[lang]}
       </span>
     </label>
   );

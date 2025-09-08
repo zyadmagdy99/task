@@ -20,23 +20,24 @@ function CountrySelect({ value, onChange }) {
         <img src={selected.flag} alt={selected.name} className="w-5 h-5" />
         <span className="text-sm">{selected.code}</span>
       </div>
-      {open && (
-        <div className="absolute top-full left-0 h-full  mt-1 w-full border shadow-lg rounded-lg z-10">
-          {countries.map((c) => (
-            <div
-              key={c.code}
-              className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                onChange(c.code);
-                setOpen(false);
-              }}
-            >
-              <img src={c.flag} alt={c.name} className="w-5 h-5" />
-              <span className="text-sm">{c.code}</span>
-            </div>
-          ))}
-        </div>
-      )}
+     {open && (
+  <div className="absolute top-full left-0 mt-1 w-full border bg-gray-100 shadow-lg rounded-lg z-10">
+    {countries.map((c) => (
+      <div
+        key={c.code}
+        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
+        onClick={() => {
+          onChange(c.code);
+          setOpen(false);
+        }}
+      >
+        <img src={c.flag} alt={c.name} className="w-5 h-5" />
+        <span className="text-sm">{c.code}</span>
+      </div>
+    ))}
+  </div>
+)}
+
     </div>
   );
 }

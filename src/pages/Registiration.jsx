@@ -6,6 +6,9 @@ import DurationSelector from '../components/DurationSelector';
 import PayInAdvanceToggle from '../components/PayInAdvanceToggle';
 import PriceSummary from '../components/PriceSummary';
 import TermsCheckbox from '../components/TermsCheckbox';
+import { useLanguage } from '../context/LanguageProvider';
+import LanguageSwitcher from '../components/LanguageSwitcher'
+
 
 const GoStudentBookingForm = () => {
   
@@ -108,10 +111,10 @@ const calculatePricing = () => {
 
   const submitOrder = async () => {
     if (!validateForm()) {
-      console.log('====================================');
-      console.log(formData);
-      console.log('====================================');
-      alert('Please fill in all required fields correctly.');
+     
+      alert(lang === "ar"
+        ? "من فضلك املأ جميع الحقول المطلوبة بشكل صحيح."
+        : "Please fill in all required fields correctly.");
       return;
     }
 
@@ -119,184 +122,304 @@ const calculatePricing = () => {
     
     // Simulate API call
     setTimeout(() => {
-      alert('Order submitted successfully! You will receive a confirmation email shortly.');
+      alert(lang === "ar"
+        ? "تم إرسال الطلب بنجاح! ستصلك رسالة تأكيد عبر البريد الإلكتروني قريبًا."
+        : "Order submitted successfully! You will receive a confirmation email shortly.");
       setIsProcessing(false);
     }, 2000);
   };
 
   const pricing = calculatePricing();
 
+  const { lang } = useLanguage();
+
+  const text = {
+    en: {
+      label: "LOGIN PHONE NUMBER",
+      hint: "( preferably the student's )",
+      placeholder: "Enter phone number",
+            phoneLabel: "CONTACT PHONE NUMBER",
+      phoneHint: "( preferably the parent's )",
+      phonePlaceholder: "Enter contact number",
+      emailLabel: "CONTACT EMAIL ADDRESS",
+      emailHint: "( preferably the parent's )",
+      emailPlaceholder: "Enter email address",
+      nameLabel: "CONTACT NAME",
+      namePlaceholder: "Enter full name",
+       billing: "BILLING ADDRESS",
+      address: "Address",
+      nr: "Nr",
+      postal: "Postal code",
+      city: "City",
+      monthly: "MONTHLY SESSIONS",
+      sessions: ["4 Sessions", "8 Sessions", "12 Sessions", "16 Sessions"],
+      
+      
+    },
+    ar: {
+      label: "رقم الهاتف لتسجيل الدخول",
+      hint: "( يفضل أن يكون رقم الطالب )",
+      placeholder: "أدخل رقم الهاتف",
+           phoneLabel: "رقم هاتف للتواصل",
+      phoneHint: "( يفضل أن يكون رقم ولي الأمر )",
+      phonePlaceholder: "أدخل رقم للتواصل",
+      emailLabel: "البريد الإلكتروني للتواصل",
+      emailHint: "( يفضل بريد ولي الأمر )",
+      emailPlaceholder: "أدخل البريد الإلكتروني",
+      nameLabel: "الاسم للتواصل",
+      namePlaceholder: "أدخل الاسم بالكامل",
+           billing: "عنوان الفاتورة",
+      address: "العنوان",
+      nr: "رقم",
+      postal: "الرمز البريدي",
+      city: "المدينة",
+      monthly: "الجلسات الشهرية",
+      sessions: ["٤ جلسات", "٨ جلسات", "١٢ جلسة", "١٦ جلسة"],
+    },
+  };
+
+  const t = text[lang] || text.en;
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
+      <div className='flex justify-center mb-3'>
+
+      <LanguageSwitcher/>
+      </div>
       <div className="max-w-7xl mx-auto shadow-xl px-4 grid lg:grid-cols-[1fr_400px]">
         {/* Form Section */}
         <div className="bg-white rounded-xl  p-8 " >
-          <h1 className="text-3xl font-semibold text-center mb-2 text-gray-900">
-            Registration & Booking at GoStudent
-          </h1>
-          <p className="text-gray-600 text-sm mb-8 text-center">
-            The leading platform for online tutoring
-          </p>
+         <h1
+        className={`text-3xl font-semibold mb-2 text-gray-900 text-center ${
+          lang === "ar" ? "leading-relaxed" : ""
+        }`}
+      >
+        {lang === "ar"
+          ? "التسجيل والحجز في GoStudent"
+          : "Registration & Booking at GoStudent"}
+      </h1>
+
+      <p
+        className={`text-sm mb-8 text-center ${
+          lang === "ar" ? "text-right text-gray-700" : "text-gray-600"
+        }`}
+      >
+        {lang === "ar"
+          ? "المنصة الرائدة للدروس الخصوصية عبر الإنترنت"
+          : "The leading platform for online tutoring"}
+      </p>
 
   {/* Login Phone */}
 <div className="mb-5">
-  <label className="block font-medium mb-2 text-sm text-gray-700/50">
-    LOGIN PHONE NUMBER <span className='text-black'>( preferably <span className='underline'>the student's</span> )</span> 
-  </label>
-  <div className="flex ">
-    <CountrySelect
-      value={formData.loginCountryCode}
-      onChange={(val) => handleInputChange("loginCountryCode", val)}
-    />
+      <label
+        className={`block font-medium mb-2 text-sm text-gray-700/50 ${
+          lang === "ar" ? "text-right" : "text-left"
+        }`}
+      >
+        {t.label}{" "}
+        <span className="text-black">
+          {t.hint.includes("الطالب") ? (
+            <span className="underline">{t.hint}</span>
+          ) : (
+            <>{t.hint.replace("student's", <span className="underline">student's</span>)}</>
+          )}
+        </span>
+      </label>
 
-    <input
-      type="tel"
-      value={formData.loginPhone}
-      onChange={(e) => handleInputChange("loginPhone", e.target.value)}
-      placeholder="Enter phone number"
-      className={`flex-1 px-4 py-3 border-2 border-l-0 bg-gray-100 text-sm focus:outline-none transition-colors ${
-        errors.loginPhone
-          ? "border-red-500"
-          : "border-gray-200 focus:border-blue-500"
-      }`}
-    />
-  </div>
-</div>
+      <div className={`flex ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+        <CountrySelect
+          value={formData.loginCountryCode}
+          onChange={(val) => handleInputChange("loginCountryCode", val)}
+        />
 
-{/* Contact Phone */}
-<div className="mb-5">
-  <label className="block font-medium mb-2 text-sm text-gray-700/50">
-    CONTACT PHONE NUMBER <span className='text-black'>( preferably <span className='underline'>the parent's</span> )</span> 
-  </label>
-  <div className="flex">
-    <CountrySelect
-      value={formData.contactCountryCode}
-      onChange={(val) => handleInputChange("contactCountryCode", val)}
-    />
+        <input
+          type="tel"
+          value={formData.loginPhone}
+          onChange={(e) => handleInputChange("loginPhone", e.target.value)}
+          placeholder={t.placeholder}
+          className={`flex-1 px-4 py-3 border-2 ${
+            lang === "ar" ? "border-r-0" : "border-l-0"
+          } bg-gray-100 text-sm focus:outline-none transition-colors ${
+            errors.loginPhone
+              ? "border-red-500"
+              : "border-gray-200 focus:border-blue-500"
+          }`}
+        />
+      </div>
+    </div>
 
-    <input
-      type="tel"
-      value={formData.contactPhone}
-      onChange={(e) => handleInputChange("contactPhone", e.target.value)}
-      placeholder="Enter contact number"
-      className={`flex-1 px-4 py-3 border-2 bg-gray-100 border-l-0 text-sm focus:outline-none transition-colors ${
-        errors.contactPhone
-          ? "border-red-500"
-          : "border-gray-200 focus:border-blue-500"
-      }`}
-    />
-  </div>
-</div>
+ {/* Contact Phone */}
+      <div className="mb-5">
+        <label
+          className={`block font-medium mb-2 text-sm text-gray-700/50 ${
+            lang === "ar" ? "text-right" : "text-left"
+          }`}
+        >
+          {t.phoneLabel}{" "}
+          <span className="text-black">
+            <span className="underline">{t.phoneHint}</span>
+          </span>
+        </label>
 
+        <div className={`flex ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+          <CountrySelect
+            value={formData.contactCountryCode}
+            onChange={(val) => handleInputChange("contactCountryCode", val)}
+          />
+          <input
+            type="tel"
+            value={formData.contactPhone}
+            onChange={(e) => handleInputChange("contactPhone", e.target.value)}
+            placeholder={t.phonePlaceholder}
+            className={`flex-1 px-4 py-3 border-2 bg-gray-100 text-sm focus:outline-none transition-colors ${
+              lang === "ar" ? "border-r-0" : "border-l-0"
+            } ${
+              errors.contactPhone
+                ? "border-red-500"
+                : "border-gray-200 focus:border-blue-500"
+            }`}
+          />
+        </div>
+      </div>
 
-          {/* Email */}
-          <div className="mb-5">
-            <label className="block font-medium mb-2 text-sm text-gray-700/50">
-              CONTACT EMAIL ADDRESS <span className='text-black'>( preferably <span className='underline'>the parent's</span> )</span> 
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="Enter email address"
-              className={`w-full px-4 py-3 border-2 bg-gray-100 rounded-lg text-sm focus:outline-none transition-colors ${
-                errors.email ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
-              }`}
-            />
-          </div>
+      {/* Contact Email */}
+      <div className="mb-5">
+        <label
+          className={`block font-medium mb-2 text-sm text-gray-700/50 ${
+            lang === "ar" ? "text-right" : "text-left"
+          }`}
+        >
+          {t.emailLabel}{" "}
+          <span className="text-black">
+            <span className="underline">{t.emailHint}</span>
+          </span>
+        </label>
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(e) => handleInputChange("email", e.target.value)}
+          placeholder={t.emailPlaceholder}
+          className={`w-full px-4 py-3 border-2 bg-gray-100 rounded-lg text-sm focus:outline-none transition-colors ${
+            errors.email
+              ? "border-red-500"
+              : "border-gray-200 focus:border-blue-500"
+          }`}
+        />
+      </div>
 
-          {/* Contact Name */}
-          <div className="mb-5">
-            <label className="block font-medium mb-2 text-sm text-gray-400">
-              CONTACT NAME
-            </label>
-            <input
-              type="text"
-              value={formData.contactName}
-              onChange={(e) => handleInputChange('contactName', e.target.value)}
-              placeholder="Enter full name"
-              className={`w-full px-4 py-3 border-2 bg-gray-100 rounded-lg text-sm focus:outline-none transition-colors ${
-                errors.contactName ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
-              }`}
-            />
-          </div>
-
+      {/* Contact Name */}
+      <div className="mb-5">
+        <label
+          className={`block font-medium mb-2 text-sm text-gray-400 ${
+            lang === "ar" ? "text-right" : "text-left"
+          }`}
+        >
+          {t.nameLabel}
+        </label>
+        <input
+          type="text"
+          value={formData.contactName}
+          onChange={(e) => handleInputChange("contactName", e.target.value)}
+          placeholder={t.namePlaceholder}
+          className={`w-full px-4 py-3 border-2 bg-gray-100 rounded-lg text-sm focus:outline-none transition-colors ${
+            errors.contactName
+              ? "border-red-500"
+              : "border-gray-200 focus:border-blue-500"
+          }`}
+        />
+      </div>
           {/* Billing Address */}
-          <div className="mb-5">
-            <label className="block font-medium mb-2 text-sm text-gray-400">
-              BILLING ADDRESS
-            </label>
-            <div className='flex gap-3'>
-            <input
-              type="text"
-              value={formData.address}
-              onChange={(e) => handleInputChange('address', e.target.value)}
-              placeholder="Address"
-              className={` w-4/5  px-4 py-3 border-2 bg-gray-100 rounded-lg text-sm focus:outline-none transition-colors mb-3 ${
-                errors.address ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
-              }`}
-            />
-            <input
-              type="text"
-              value={formData.apt}
-              onChange={(e) => handleInputChange('apt', e.target.value)}
-              placeholder="Nr"
-              className="  px-4 py-3 border-2 border-gray-200 bg-gray-100 rounded-lg text-sm focus:border-blue-500 focus:outline-none mb-3"
-            />
+  {/* Billing Address */}
+      <div className="mb-5">
+        <label
+          className={`block font-medium mb-2 text-sm text-gray-400 ${
+            lang === "ar" ? "text-right" : "text-left"
+          }`}
+        >
+          {t.billing}
+        </label>
 
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-  <input
-    type="text"
-    value={formData.postalCode}
-    onChange={(e) => handleInputChange('postalCode', e.target.value)}
-    placeholder="Postal code"
-    className={`px-4 py-3 border-2 rounded-lg text-sm bg-gray-100 focus:outline-none transition-colors ${
-      errors.postalCode ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
-    }`}
-  />
-  <input
-    type="text"
-    value={formData.city}
-    onChange={(e) => handleInputChange('city', e.target.value)}
-    placeholder="City"
-    className={`px-4 py-3 border-2 rounded-lg text-sm bg-gray-100 focus:outline-none transition-colors ${
-      errors.city ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
-    }`}
-  />
+        <div className={`flex gap-3 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+          <input
+            type="text"
+            value={formData.address}
+            onChange={(e) => handleInputChange("address", e.target.value)}
+            placeholder={t.address}
+            className={`w-4/5 px-4 py-3 border-2 bg-gray-100 rounded-lg text-sm focus:outline-none transition-colors mb-3 ${
+              errors.address ? "border-red-500" : "border-gray-200 focus:border-blue-500"
+            }`}
+          />
+          <input
+            type="text"
+            value={formData.apt}
+            onChange={(e) => handleInputChange("apt", e.target.value)}
+            placeholder={t.nr}
+            className="px-4 py-3 border-2 border-gray-200 bg-gray-100 rounded-lg text-sm focus:border-blue-500 focus:outline-none mb-3"
+          />
+        </div>
 
-  {/* Country dropdown with flags */}
-  <CountryDropdown
-    value={formData.country}
-    onChange={(val) => handleInputChange('country', val)}
-  />
-</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input
+            type="text"
+            value={formData.postalCode}
+            onChange={(e) => handleInputChange("postalCode", e.target.value)}
+            placeholder={t.postal}
+            className={`px-4 py-3 border-2 rounded-lg text-sm bg-gray-100 focus:outline-none transition-colors ${
+              errors.postalCode
+                ? "border-red-500"
+                : "border-gray-200 focus:border-blue-500"
+            }`}
+          />
+          <input
+            type="text"
+            value={formData.city}
+            onChange={(e) => handleInputChange("city", e.target.value)}
+            placeholder={t.city}
+            className={`px-4 py-3 border-2 rounded-lg text-sm bg-gray-100 focus:outline-none transition-colors ${
+              errors.city
+                ? "border-red-500"
+                : "border-gray-200 focus:border-blue-500"
+            }`}
+          />
 
-          </div>
+          {/* Country dropdown with flags */}
+          <CountryDropdown
+            value={formData.country}
+            onChange={(val) => handleInputChange("country", val)}
+          />
+        </div>
+      </div>
 
-          {/* Monthly Sessions */}
-          <div className="mb-5">
-            <label className="block font-medium mb-2 text-sm text-gray-400">
-              MONTHLY SESSIONS
-            </label>
-            <select
-              value={formData.sessions}
-              onChange={(e) => handleInputChange('sessions', e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-200 text-gray-700 rounded-lg text-sm focus:border-blue-500 focus:outline-none bg-gray-100"
-            >
-              <option value="4">4 Sessions</option>
-              <option value="8">8 Sessions</option>
-              <option value="12">12 Sessions</option>
-              <option value="16">16 Sessions</option>
-            </select>
-          </div>
-
+      {/* Monthly Sessions */}
+      <div className="mb-5">
+        <label
+          className={`block font-medium mb-2 text-sm text-gray-400 ${
+            lang === "ar" ? "text-right" : "text-left"
+          }`}
+        >
+          {t.monthly}
+        </label>
+        <select
+          value={formData.sessions}
+          onChange={(e) => handleInputChange("sessions", e.target.value)}
+          className="w-full px-4 py-3 border-2 border-gray-200 text-gray-700 rounded-lg text-sm focus:border-blue-500 focus:outline-none bg-gray-100"
+        >
+          {t.sessions.map((s, i) => (
+            <option key={i} value={(i + 1) * 4}>
+              {s}
+            </option>
+          ))}
+        </select>
+      </div>
           {/* Payment Method */}
           <div className="mb-5">
-            <label className="block font-medium mb-2 text-sm text-gray-400">
-              SELECT PAYMENT METHOD
-            </label>
+            <label
+      className={`block font-medium mb-2 text-sm text-gray-400 ${
+        lang === "ar" ? "text-right" : "text-left"
+      }`}
+    >
+      {lang === "ar" ? "اختر طريقة الدفع" : "SELECT PAYMENT METHOD"}
+    </label>
             <div className="flex flex-col gap-3 mb-5">
   <PaymentMethodOption
     id="sepa"
@@ -371,18 +494,28 @@ const calculatePricing = () => {
               </div>
             </div>
           )}
-
-         
-                    <p className='text-sm text-gray-400 pt-5'>100% secure payments. All data is encrypted.</p>
-
+ <p
+      className={`text-sm text-gray-400 pt-5 ${
+        lang === "ar" ? "text-right" : "text-left"
+      }`}
+    >
+      {lang === "ar"
+        ? "مدفوعات آمنة 100%. جميع البيانات مشفرة."
+        : "100% secure payments. All data is encrypted."}
+    </p>
         </div>
 
         {/* Order Summary */}
         <div className="flex flex-col justify-between rounded-xl p-8 bg-gray-100 ">
           <div >
 
-          <div className="font-semibold mb-5 text-gray-900">ORDER OVERVIEW</div>
-
+    <div
+      className={`font-semibold mb-5 text-gray-900 ${
+        lang === "ar" ? "text-right" : "text-left"
+      }`}
+    >
+      {lang === "ar" ? "نظرة عامة على الطلب" : "ORDER OVERVIEW"}
+    </div>
        <DurationSelector
         selected={formData.duration}
         onChange={(val) => handleInputChange("duration", val)}
@@ -403,8 +536,13 @@ const calculatePricing = () => {
                   disabled={isProcessing}
                   className="w-full bg-blue-500 text-white py-4 rounded-lg text-base font-semibold mt-5 hover:-translate-y-0.5 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isProcessing ? 'Processing...' : 'Order Now'}
-                </button>
+ {isProcessing
+        ? lang === "ar"
+          ? "جارٍ المعالجة..."
+          : "Processing..."
+        : lang === "ar"
+        ? "أكمل الطلب"
+        : "Order Now"}                </button>
 
                 {/* Terms */}
       <TermsCheckbox
@@ -413,9 +551,18 @@ const calculatePricing = () => {
               onChange={(val) => handleInputChange("termsAccepted", val)}
             />          
           </div>
-          <div className="text-center mt-5 pt-5 font-semibold border-t border-gray-200 flex justify-center items-end text-sm text-gray-400">
-            <span className=" font-semibold">95%</span> SATISFACTION RATE!
-          </div>
+         <div
+      className={`text-center mt-5 pt-5 font-semibold border-t border-gray-200 flex justify-center items-end text-sm text-gray-400 ${
+        lang === "ar" ? "flex-row-reverse" : ""
+      }`}
+    >
+      <span className="font-semibold">
+        {lang === "ar" ? "٩٥٪" : "95%"}
+      </span>
+      <span className="ml-1">
+        {lang === "ar" ? "معدل رضا العملاء!" : "SATISFACTION RATE!"}
+      </span>
+    </div>
         </div>
       </div>
     </div>
