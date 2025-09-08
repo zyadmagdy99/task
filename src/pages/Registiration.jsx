@@ -212,19 +212,26 @@ const calculatePricing = () => {
   {/* Login Phone */}
 <div className="mb-5">
       <label
-        className={`block font-medium mb-2 text-sm text-gray-700/50 ${
-          lang === "ar" ? "text-right" : "text-left"
-        }`}
-      >
-        {t.label}{" "}
-        <span className="text-black">
-          {t.hint.includes("الطالب") ? (
-            <span className="underline">{t.hint}</span>
-          ) : (
-            <>{t.hint.replace("student's", <span className="underline">student's</span>)}</>
-          )}
-        </span>
-      </label>
+  className={`block font-medium mb-2 text-xs sm:text-sm md:text-base  text-gray-700/50 ${
+    lang === "ar" ? "text-right" : "text-left"
+  }`}
+>
+  {t.label}{" "}
+  <span className="text-black">
+    {t.hint.includes("student's") ? (
+      <>
+        ( preferably <span className="underline">student's</span> )
+      </>
+    ) : t.hint.includes("الطالب") ? (
+      <>
+        ( يفضل <span className="underline">الطالب</span> )
+      </>
+    ) : (
+      t.hint
+    )}
+  </span>
+</label>
+
 
       <div className={`flex ${lang === "ar" ? "flex-row-reverse" : ""}`}>
         <CountrySelect
@@ -251,7 +258,7 @@ const calculatePricing = () => {
  {/* Contact Phone */}
       <div className="mb-5">
         <label
-          className={`block font-medium mb-2 text-sm text-gray-700/50 ${
+          className={`block font-medium mb-2 text-xs sm:text-sm md:text-base  text-gray-700/50 ${
             lang === "ar" ? "text-right" : "text-left"
           }`}
         >
@@ -285,7 +292,7 @@ const calculatePricing = () => {
       {/* Contact Email */}
       <div className="mb-5">
         <label
-          className={`block font-medium mb-2 text-sm text-gray-700/50 ${
+          className={`block font-medium mb-2 text-xs sm:text-sm md:text-base  text-gray-700/50 ${
             lang === "ar" ? "text-right" : "text-left"
           }`}
         >

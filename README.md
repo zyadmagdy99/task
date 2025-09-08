@@ -1,12 +1,39 @@
-# React + Vite
+# Registration & Booking Flow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##  Overview
+This is a **React + Vite** project implementing a registration & booking flow.  
+It includes multi-language support (English / Arabic) with **RTL** support, responsive design with **TailwindCSS**, and a simulated checkout process.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+React – Frontend framework
 
-## Expanding the ESLint configuration
+Vite – Build tool
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+TailwindCSS – Styling
+
+JavaScript (ES6+)
+
+## Features
+
+ Multi-language support (English / العربية)
+
+ Automatic direction change (LTR ↔ RTL)
+
+ Fully responsive layout
+
+ Reusable components:
+
+Language switcher with flags
+
+Country dropdown with flags
+
+Payment method selector
+
+Price summary
+
+Form validation with error handling
+
+ Simulated checkout flow with order confirmation
+
+   > "This project was built as part of a technical assignment."  
