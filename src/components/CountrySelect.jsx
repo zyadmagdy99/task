@@ -1,43 +1,52 @@
 import { useState } from "react";
-
-const countries = [
-  { code: "+30", name: "Greece", flag: "https://flagcdn.com/w20/gr.png" },
-  { code: "+1", name: "USA", flag: "https://flagcdn.com/w20/us.png" },
-  { code: "+44", name: "UK", flag: "https://flagcdn.com/w20/gb.png" },
-  { code: "+49", name: "Germany", flag: "https://flagcdn.com/w20/de.png" },
-];
+import CountryFlag from "react-country-flag";
+import { allCountries } from "country-telephone-data";
 
 function CountrySelect({ value, onChange }) {
   const [open, setOpen] = useState(false);
-  const selected = countries.find((c) => c.code === value) || countries[0];
+
+  // Default to UAE if no value provided
+  const defaultCountry = allCountries.find((c) => c.iso2 === "ae");
+
+  const selected =
+    allCountries.find((c) => c.dialCode === value) || defaultCountry;
 
   return (
-    <div className="relative w-28 ">
+    <div className="relative w-47">
       <div
-        className="flex items-center border-r-0 gap-2 h-full px-4 py-3 border-2 border-gray-200 text-sm bg-gray-100 cursor-pointer"
+        className="flex items-center gap-2 h-full px-4 py-3 border-2 border-gray-200 text-sm bg-gray-100 cursor-pointer"
         onClick={() => setOpen(!open)}
       >
-        <img src={selected.flag} alt={selected.name} className="w-5 h-5" />
-        <span className="text-sm">{selected.code}</span>
+        <CountryFlag
+          countryCode={selected.iso2.toUpperCase()}
+          svg
+          style={{ width: "20px", height: "20px" }}
+        />
+        <span className="text-sm">{`+${selected.dialCode}`}</span>
       </div>
-     {open && (
-  <div className="absolute top-full left-0 mt-1 w-full border bg-gray-100 shadow-lg rounded-lg z-10">
-    {countries.map((c) => (
-      <div
-        key={c.code}
-        className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
-        onClick={() => {
-          onChange(c.code);
-          setOpen(false);
-        }}
-      >
-        <img src={c.flag} alt={c.name} className="w-5 h-5" />
-        <span className="text-sm">{c.code}</span>
-      </div>
-    ))}
-  </div>
-)}
 
+      {open && (
+        <div className="absolute top-full left-0 mt-1 w-full border bg-gray-100 shadow-lg rounded-lg z-10 max-h-60 overflow-auto">
+          {allCountries.map((c) => (
+            <div
+              key={c.iso2}
+              className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
+              onClick={() => {
+                onChange(c.dialCode);
+                setOpen(false);
+              }}
+            >
+              <CountryFlag
+                countryCode={c.iso2.toUpperCase()}
+                svg
+                style={{ width: "20px", height: "20px" }}
+              />
+              <span className="text-sm">{`+${c.dialCode}`}</span>
+              <span className="text-xs text-gray-500">{c.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

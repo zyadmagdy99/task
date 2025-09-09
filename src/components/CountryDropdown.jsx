@@ -1,38 +1,24 @@
 import { useState } from "react";
+import CountryFlag from "react-country-flag";
+import countriesData from "world-countries";
 import { useLanguage } from "../context/LanguageProvider";
 
 function CountryDropdown({ value, onChange }) {
   const { lang } = useLanguage();
-
-  // Store translations for each country
-  const countries = [
-    {
-      code: "+30",
-      name: { en: "Greece", ar: "اليونان" },
-      flag: "https://flagcdn.com/w20/gr.png",
-    },
-    {
-      code: "+1",
-      name: { en: "United States", ar: "الولايات المتحدة" },
-      flag: "https://flagcdn.com/w20/us.png",
-    },
-    {
-      code: "+44",
-      name: { en: "United Kingdom", ar: "المملكة المتحدة" },
-      flag: "https://flagcdn.com/w20/gb.png",
-    },
-    {
-      code: "+49",
-      name: { en: "Germany", ar: "ألمانيا" },
-      flag: "https://flagcdn.com/w20/de.png",
-    },
-  ];
-
   const [open, setOpen] = useState(false);
 
-  // Selected country based on code or fallback to first
-  const selected =
-    countries.find((c) => c.code === value) || countries[0];
+  // Map countriesData to a simpler format
+  const countries = countriesData.map((c) => ({
+    code: c.cca2, // ISO2 code for flag
+    name: {
+      en: c.name.common,
+      ar: c.translations?.ara?.common || c.name.common, // fallback if Arabic translation missing
+    },
+  }));
+
+  // Default to UAE if no value
+  const defaultCountry = countries.find((c) => c.code === "AE");
+  const selected = countries.find((c) => c.code === value) || defaultCountry;
 
   return (
     <div className="relative w-full">
@@ -41,7 +27,7 @@ function CountryDropdown({ value, onChange }) {
         className="flex items-center gap-2 h-full border-2 border-gray-200 px-3 py-2 rounded-lg bg-gray-100 cursor-pointer"
         onClick={() => setOpen(!open)}
       >
-        <img src={selected.flag} alt={selected.name[lang]} className="w-5 h-5" />
+        <CountryFlag countryCode={selected.code} svg style={{ width: 20, height: 20 }} />
         <span className="text-sm">{selected.name[lang]}</span>
       </div>
 
@@ -53,13 +39,12 @@ function CountryDropdown({ value, onChange }) {
               key={c.code}
               className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                onChange(c.code); // return code instead of name
+                onChange(c.code);
                 setOpen(false);
               }}
             >
-              <img src={c.flag} alt={c.name[lang]} className="w-5 h-5" />
+              <CountryFlag countryCode={c.code} svg style={{ width: 20, height: 20 }} />
               <span className="text-sm">{c.name[lang]}</span>
-              <span className="ml-auto text-xs text-gray-500">{c.code}</span>
             </div>
           ))}
         </div>

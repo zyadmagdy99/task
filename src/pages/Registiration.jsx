@@ -8,22 +8,24 @@ import PriceSummary from '../components/PriceSummary';
 import TermsCheckbox from '../components/TermsCheckbox';
 import { useLanguage } from '../context/LanguageProvider';
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 
 const GoStudentBookingForm = () => {
   
   const [formData, setFormData] = useState({
     loginPhone: '',
-    loginCountryCode: '+30',
+    loginCountryCode: '+971',
     contactPhone: '',
-    contactCountryCode: '+30',
+    contactCountryCode: '+971',
     email: '',
     contactName: '',
     address: '',
     apt: '',
     postalCode: '',
     city: '',
-    country: 'Greece',
+    country: 'Unaited Arab Emirates',
     sessions: '8',
     paymentMethod: 'sepa',
     cardHolder: '',
@@ -62,6 +64,8 @@ const GoStudentBookingForm = () => {
     if (!formData.city.trim()) newErrors.city = true;
     if (!formData.country) newErrors.country = true;
     if (!formData.termsAccepted) newErrors.termsAccepted = true;
+      if (!formData.duration) newErrors.duration = true;
+
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -109,25 +113,66 @@ const calculatePricing = () => {
 };
 
 
-  const submitOrder = async () => {
-    if (!validateForm()) {
-     
-      alert(lang === "ar"
-        ? "من فضلك املأ جميع الحقول المطلوبة بشكل صحيح."
-        : "Please fill in all required fields correctly.");
-      return;
-    }
 
-    setIsProcessing(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      alert(lang === "ar"
+const submitOrder = async () => {
+  if (!validateForm()) {
+    alert(
+      lang === "ar"
+        ? "من فضلك املأ جميع الحقول المطلوبة بشكل صحيح."
+        : "Please fill in all required fields correctly."
+    );
+    return;
+  }
+
+  setIsProcessing(true);
+
+  try {
+    const pricing = calculatePricing(); // optional: store pricing too
+
+    // Save form data to Firestore
+    await addDoc(collection(db, "orders"), {
+      ...formData,
+      pricing,
+      createdAt: new Date()
+    });
+
+    alert(
+      lang === "ar"
         ? "تم إرسال الطلب بنجاح! ستصلك رسالة تأكيد عبر البريد الإلكتروني قريبًا."
-        : "Order submitted successfully! You will receive a confirmation email shortly.");
-      setIsProcessing(false);
-    }, 2000);
-  };
+        : "Order submitted successfully! You will receive a confirmation email shortly."
+    );
+
+    // Optionally, reset form
+    setFormData({
+      loginPhone: "",
+      loginCountryCode: "+971",
+      contactPhone: "",
+      contactCountryCode: "+971",
+      email: "",
+      contactName: "",
+      address: "",
+      apt: "",
+      postalCode: "",
+      city: "",
+      country: "United Arab Emirates",
+      sessions: "8",
+      paymentMethod: "sepa",
+      cardHolder: "",
+      cardNumber: "",
+      cardExpiryCvc: "",
+      termsAccepted: false
+    });
+  } catch (error) {
+    console.error("Error submitting order:", error);
+    alert(
+      lang === "ar"
+        ? "حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى."
+        : "An error occurred while submitting the order. Please try again."
+    );
+  }
+
+  setIsProcessing(false);
+};
 
   const pricing = calculatePricing();
 
@@ -528,9 +573,11 @@ const calculatePricing = () => {
        <DurationSelector
         selected={formData.duration}
         onChange={(val) => handleInputChange("duration", val)}
+          error={errors.duration}
 
-
-            /> {/* pay in advance  */} 
+          /> 
+          
+          {/* pay in advance  */} 
                   <PayInAdvanceToggle
               checked={formData.payInAdvance}
               onChange={(val) => handleInputChange("payInAdvance", val)}

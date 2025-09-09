@@ -1,6 +1,6 @@
 import { useLanguage } from "../context/LanguageProvider";
 
-export default function DurationSelector({ selected, onChange }) {
+export default function DurationSelector({ selected, onChange, error }) {
   const { lang } = useLanguage();
 
   const options = [
@@ -13,21 +13,30 @@ export default function DurationSelector({ selected, onChange }) {
   ];
 
   return (
-    <div className="grid grid-cols-3 mb-5 ">
+    <div className="grid grid-cols-3 mb-2">
       {options.map((option) => (
         <button
           key={option.value}
           type="button"
           onClick={() => onChange(option.value)}
-          className={`py-3 text-center font-medium border  transition-all ${
+          className={`py-3 text-center font-medium border transition-all ${
             selected === option.value
               ? "border-blue-500 bg-blue-50 text-blue-700"
+              : error
+              ? "border-red-500 bg-white text-red-600 hover:border-red-400"
               : "border-gray-200 bg-white hover:border-gray-300"
           }`}
         >
           {option.label[lang]}
         </button>
       ))}
+
+      {/* Error message */}
+      {error && (
+        <p className="col-span-3 text-red-500 text-sm mt-1">
+          {lang === "ar" ? "من فضلك اختر مدة الاشتراك" : "Please select a duration"}
+        </p>
+      )}
     </div>
   );
 }

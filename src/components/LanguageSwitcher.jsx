@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useLanguage } from "../context/LanguageProvider";
 
 const languages = [
+  { code: "ar", label: "العربية", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_United_Arab_Emirates.svg/960px-Flag_of_the_United_Arab_Emirates.svg.png" },
   { code: "en", label: "English", flag: "https://flagcdn.com/w20/gb.png" },
-  { code: "ar", label: "العربية", flag: "https://flagcdn.com/w20/eg.png" },
 ];
 
 export default function LanguageSwitcher() {
