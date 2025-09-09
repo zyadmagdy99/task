@@ -233,7 +233,7 @@ const calculatePricing = () => {
 </label>
 
 
-      <div className={`flex ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+      <div className={`flex ${lang === "ar" ? "" : ""}`}>
         <CountrySelect
           value={formData.loginCountryCode}
           onChange={(val) => handleInputChange("loginCountryCode", val)}
@@ -241,6 +241,7 @@ const calculatePricing = () => {
 
         <input
           type="tel"
+            dir={lang === "ar" ? "rtl" : ""}
           value={formData.loginPhone}
           onChange={(e) => handleInputChange("loginPhone", e.target.value)}
           placeholder={t.placeholder}
@@ -268,13 +269,14 @@ const calculatePricing = () => {
           </span>
         </label>
 
-        <div className={`flex ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+        <div className={`flex ${lang === "ar" ? "" : ""}`}>
           <CountrySelect
             value={formData.contactCountryCode}
             onChange={(val) => handleInputChange("contactCountryCode", val)}
           />
           <input
             type="tel"
+            dir={lang === "ar" ? "rtl" : ""}
             value={formData.contactPhone}
             onChange={(e) => handleInputChange("contactPhone", e.target.value)}
             placeholder={t.phonePlaceholder}
